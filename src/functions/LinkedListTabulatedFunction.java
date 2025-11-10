@@ -119,8 +119,10 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
 
     // Получение точки по индексу
     public FunctionPoint getPoint(int index) {
-        return getNodeByIndex(index).point;
+        FunctionPoint p = getNodeByIndex(index).point;
+        return new FunctionPoint(p.getX(), p.getY());
     }
+
 
     // Получение количества точек
     public int getPointsCount() {
@@ -178,19 +180,23 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
     }
 
     public double getFunctionValue(double x) {
-        if (x < getLeftDomainBorder() || x > getRightDomainBorder()) {
+        double leftX = getLeftDomainBorder();
+        double rightX = getRightDomainBorder();
+
+        if (x < leftX || x > rightX) {
             return Double.NaN;
         }
 
-        FunctionNode current = head.next;
-        while (current != head) {
-            if (current.point.getX() == x) {
-                return current.point.getY();
-            }
-            current = current.next;
+        double epsilon = 1e-10; // машинный эпсилон
+        //если x почти равен левому краю
+        if (Math.abs(x - leftX) < epsilon) {
+            return head.next.point.getY();
+        }
+        if (Math.abs(x - rightX) < epsilon) {
+            return head.prev.point.getY();
         }
 
-        current = head.next;
+        FunctionNode current = head.next;
         while (current.next != head) {
             double x1 = current.point.getX();
             double y1 = current.point.getY();

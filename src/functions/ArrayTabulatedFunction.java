@@ -38,7 +38,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction{
             throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " вне границ массива точек");
         }
 
-        return points[index];
+        return new FunctionPoint(points[index].getX(), points[index].getY());
     }
 
     public FunctionPoint[] getPoints() {
@@ -57,14 +57,16 @@ public class ArrayTabulatedFunction implements TabulatedFunction{
 
     // вычисление значения функции
     public double getFunctionValue(double x) {
-        if (x < getLeftDomainBorder() || x > getRightDomainBorder()) {
+        double leftX = getLeftDomainBorder();
+        double rightX = getRightDomainBorder();
+
+        if (x < leftX || x > rightX) {
             return Double.NaN;
         }
+        double epsilon = 1e-10;
 
-        for (int i = 0; i < points.length; i++) {
-            if (points[i].getX() == x) {
-                return points[i].getY();
-            }
+        if (Math.abs(x - leftX) < epsilon) {
+            return points[0].getY();
         }
 
         for (int i = 0; i < points.length - 1; i++) {

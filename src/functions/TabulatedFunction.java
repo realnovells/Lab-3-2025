@@ -16,6 +16,7 @@ public interface TabulatedFunction {
     double getPointY(int index);
     void setPointY(int index, double y);
 
+
     double getLeftDomainBorder();
     double getRightDomainBorder();
 
